@@ -288,8 +288,18 @@ class HarvesterBase(SingletonPlugin):
 
             if self.config and self.config.get('clean_tags', False):
                 tags = package_dict.get('tags', [])
-                tags = [munge_tag(t) for t in tags if munge_tag(t) != '']
-                tags = list(set(tags))
+                #print package_dict
+
+                #tags = [munge_tag(t) for t in tags if munge_tag(t) != '']
+
+                for t in tags:
+                    munged = munge_tag(t['name'])
+                    if munged != '':
+                        t['name'] = munged
+
+                tags = [dict(t) for t in set([tuple(d.items()) for d in tags])]
+                #tags = list(set(tags))
+
                 package_dict['tags'] = tags
 
             # Check if package exists
